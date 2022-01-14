@@ -1,17 +1,8 @@
-//
-//  File.swift
-//  
-//
-//  Created by Andrew Marushko on 13.01.2022.
-//
-
 import Fluent
 import Vapor
-import Foundation
 
 final class User: Model, Content {
     static let schema = "users"
-
 
     @ID
     var id: UUID?

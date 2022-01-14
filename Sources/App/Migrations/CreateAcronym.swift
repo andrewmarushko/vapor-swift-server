@@ -1,4 +1,3 @@
-import Vapor
 import Fluent
 
 struct CreateAcronym: Migration {
@@ -15,4 +14,3 @@ struct CreateAcronym: Migration {
         database.schema("acronyms").delete()
     }
 }
-
