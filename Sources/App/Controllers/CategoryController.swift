@@ -7,6 +7,14 @@ struct CategoriesController: RouteCollection {
         categoriesRoute.get(use: getAllHandler)
         categoriesRoute.get(":categoryID", use: getHandler)
         categoriesRoute.get(":categoryID", "acronyms", use: getAcronymsHandler)
+
+        let tokenAuthMiddleware = Token.authenticator()
+        let guardAuthMiddleware = User.guardMiddleware()
+        let tokenAuthGroup = categoriesRoute.grouped(
+            tokenAuthMiddleware,
+            guardAuthMiddleware)
+        tokenAuthGroup.post(use: createHandler)
+
     }
 
     func createHandler(_ req: Request) throws -> EventLoopFuture<Category> {
