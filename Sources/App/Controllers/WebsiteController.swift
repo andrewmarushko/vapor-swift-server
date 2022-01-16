@@ -13,6 +13,8 @@ struct WebsiteController: RouteCollection {
         authSessionsRoutes.get("users", use: allUsersHandler)
         authSessionsRoutes.get("categories", use: allCategoriesHandler)
         authSessionsRoutes.get("categories", ":categoryID", use: categoryHandler)
+        authSessionsRoutes.get("register", use: registerHandler)
+        authSessionsRoutes.post("register", use: registerPostHandler)
 
         let protectedRoutes = authSessionsRoutes.grouped(User.redirectMiddleware(path: "/login"))
         protectedRoutes.get("acronyms", "create", use: createAcronymHandler)
@@ -196,10 +198,28 @@ struct WebsiteController: RouteCollection {
     }
 
     func logoutHandler(_ req: Request) -> Response {
-            // 2
         req.auth.logout(User.self)
-            // 3
         return req.redirect(to: "/")
+    }
+
+    func registerHandler(_ req: Request) -> EventLoopFuture<View> {
+        let context = RegisterContext()
+        return req.view.render("register", context)
+    }
+
+    func registerPostHandler(_ req: Request) throws -> EventLoopFuture<Response> {
+        let data = try req.content.decode(RegisterData.self)
+        let password = try Bcrypt.hash(data.password)
+        let user = User(
+            name: data.name,
+            username: data.username,
+            password: password
+        )
+        return user.save(on: req.db).map {
+            req.auth.login(user)
+
+            return req.redirect(to: "/")
+        }
     }
 }
 
@@ -265,4 +285,15 @@ struct LoginContext: Encodable {
     init(loginError: Bool = false) {
         self.loginError = loginError
     }
+}
+
+struct RegisterContext: Encodable {
+    let title = "Register"
+}
+
+struct RegisterData: Content {
+    let name: String
+    let username: String
+    let password: String
+    let confirmPassword: String
 }
