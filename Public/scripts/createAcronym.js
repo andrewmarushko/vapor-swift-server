@@ -7,9 +7,9 @@ $.ajax({
     for (var i=0; i < response.length; i++) {
       var tagToTransform = response[i];
       var newTag = {
-        id: tagToTransform["name"],
-        text: tagToTransform["name"]
-    };
+                     id: tagToTransform["name"],
+                     text: tagToTransform["name"]
+                   };
       dataToReturn.push(newTag);
     }
     $("#categories").select2({
