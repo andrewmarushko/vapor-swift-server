@@ -39,6 +39,7 @@ public func configure(_ app: Application) throws {
   app.migrations.add(CreateAcronymCategoryPivot())
   app.migrations.add(CreateToken())
   app.migrations.add(CreateAdminUser())
+    app.migrations.add(CreatePasswordToken())
   
   app.logger.logLevel = .debug
   
