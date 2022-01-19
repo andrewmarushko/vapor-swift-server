@@ -128,6 +128,24 @@
         }
       },
       {
+        "package": "sendgrid",
+        "repositoryURL": "https://github.com/vapor-community/sendgrid.git",
+        "state": {
+          "branch": null,
+          "revision": "c744bc4398bd8dec50e3a6cfb0cdeca1aa853c07",
+          "version": "4.0.0"
+        }
+      },
+      {
+        "package": "sendgrid-kit",
+        "repositoryURL": "https://github.com/vapor-community/sendgrid-kit.git",
+        "state": {
+          "branch": null,
+          "revision": "e5f7506f9cc6b10cf0f52cb08ab4b9a43cfba6dc",
+          "version": "1.0.1"
+        }
+      },
+      {
         "package": "sql-kit",
         "repositoryURL": "https://github.com/vapor/sql-kit.git",
         "state": {
