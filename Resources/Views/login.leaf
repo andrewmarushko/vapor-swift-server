@@ -32,6 +32,16 @@
       <button type="submit" class="btn btn-primary">
         Log In
       </button>
+      <a href="/login-google">
+        <img class="mt-3" src="/images/sign-in-with-google.png"
+        alt="Sign In With Google">
+      </a>
+
+
+      <br />
+      <a href="/forgottenPassword">Forgotten your password?</a>
+
+
     </form>
   #endexport
 #endextend
