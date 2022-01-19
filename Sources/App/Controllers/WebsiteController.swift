@@ -223,7 +223,8 @@ struct WebsiteController: RouteCollection {
     let user = User(
       name: data.name,
       username: data.username,
-      password: password)
+      password: password,
+      email: data.emailAddress)
     return user.save(on: req.db).map {
       req.auth.login(user)
       return req.redirect(to: "/")
@@ -309,6 +310,7 @@ struct RegisterData: Content {
   let username: String
   let password: String
   let confirmPassword: String
+    let emailAddress: String
 }
 
 extension RegisterData: Validatable {
@@ -317,6 +319,7 @@ extension RegisterData: Validatable {
     validations.add("username", as: String.self, is: .alphanumeric && .count(3...))
     validations.add("password", as: String.self, is: .count(8...))
     validations.add("zipCode", as: String.self, is: .zipCode, required: false)
+      validations.add("emailAddress", as: String.self, is: .email)
   }
 }
 

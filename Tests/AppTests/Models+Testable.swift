@@ -23,7 +23,8 @@ extension User {
     let user = User(
       name: name,
       username: createUsername,
-      password: password)
+      password: password,
+      email: "\(createUsername)@test.com")
     try user.save(on: database).wait()
     return user
   }
