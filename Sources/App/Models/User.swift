@@ -16,6 +16,9 @@ final class User: Model, Content {
     @Field(key: "email")
     var email: String
 
+    @OptionalField(key: "profilePicture")
+    var profilePicture: String?
+
   @Field(key: "password")
   var password: String
   
@@ -24,11 +27,12 @@ final class User: Model, Content {
   
   init() {}
   
-    init(id: UUID? = nil, name: String, username: String, password: String, email: String) {
+    init(id: UUID? = nil, name: String, username: String, password: String, email: String, profilePicture: String? = nil) {
     self.name = name
     self.username = username
         self.email = email
     self.password = password
+        self.profilePicture = profilePicture
   }
 
   final class Public: Content {

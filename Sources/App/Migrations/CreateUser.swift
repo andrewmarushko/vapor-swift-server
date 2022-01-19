@@ -8,6 +8,7 @@ struct CreateUser: Migration {
       .field("username", .string, .required)
       .field("email", .string, .required).unique(on: "email")
       .field("password", .string, .required)
+      .field("profilePicture", .string)
       .unique(on: "username")
       .create()
   }
