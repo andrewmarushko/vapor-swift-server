@@ -2,12 +2,14 @@ import Fluent
 import FluentPostgresDriver
 import Vapor
 import Leaf
+import SendGrid
 
 // configures your application
 public func configure(_ app: Application) throws {
   // uncomment to serve files from /Public folder
   app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
   app.middleware.use(app.sessions.middleware)
+    app.sendgrid.initialize()
   
   let databaseName: String
   let databasePort: Int
@@ -37,6 +39,7 @@ public func configure(_ app: Application) throws {
   app.migrations.add(CreateAcronymCategoryPivot())
   app.migrations.add(CreateToken())
   app.migrations.add(CreateAdminUser())
+    app.migrations.add(CreatePasswordToken())
   
   app.logger.logLevel = .debug
   
