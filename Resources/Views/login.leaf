@@ -37,6 +37,11 @@
         alt="Sign In With Google">
       </a>
 
+
+      <br />
+      <a href="/forgottenPassword">Forgotten your password?</a>
+
+
     </form>
   #endexport
 #endextend

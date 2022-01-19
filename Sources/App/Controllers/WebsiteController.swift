@@ -16,6 +16,7 @@ struct WebsiteController: RouteCollection {
     authSessionsRoutes.get("users", use: allUsersHandler)
     authSessionsRoutes.get("categories", use: allCategoriesHandler)
     authSessionsRoutes.get("categories", ":categoryID", use: categoryHandler)
+      authSessionsRoutes.get("forgottenPassword", use: forgottenPasswordHandler)
     
     let protectedRoutes = authSessionsRoutes.grouped(User.redirectMiddleware(path: "/login"))
     protectedRoutes.get("acronyms", "create", use: createAcronymHandler)
@@ -230,6 +231,11 @@ struct WebsiteController: RouteCollection {
       return req.redirect(to: "/")
     }
   }
+
+
+    func forgottenPasswordHandler(_ req: Request) -> EventLoopFuture<View> {
+        req.view.render("forgottenPassword", ["title": "Reset Your Password"])
+    }
 }
 
 struct IndexContext: Encodable {
