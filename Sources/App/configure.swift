@@ -39,12 +39,12 @@ public func configure(_ app: Application) throws {
   app.migrations.add(CreateAcronymCategoryPivot())
   app.migrations.add(CreateToken())
 
-    switch app.environment {
-        case .development, .testing:
-            app.migrations.add(CreateAdminUser())
-        default: break
-    }
-
+//    switch app.environment {
+//        case .development, .testing:
+//            app.migrations.add(CreateAdminUser())
+//        default: break
+//    }
+    app.migrations.add(CreateAdminUser())
     app.migrations.add(AddTwitterURLToUser())
     app.migrations.add(CreatePasswordToken())
     app.migrations.add(MakeCategoriesUnique())

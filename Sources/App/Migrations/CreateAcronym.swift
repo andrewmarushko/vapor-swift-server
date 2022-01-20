@@ -7,6 +7,8 @@ struct CreateAcronym: Migration {
       .field(Acronym.v20210114.short, .string, .required)
       .field(Acronym.v20210114.long, .string, .required)
       .field(Acronym.v20210114.userID, .uuid, .required, .references(User.v20210113.schemaName, User.v20210113.id))
+      .field("createdAt", .datetime)
+      .field("updatedAt", .datetime)
       .create()
   }
   

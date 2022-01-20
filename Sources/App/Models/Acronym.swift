@@ -18,6 +18,12 @@ final class Acronym: Model {
   
   @Siblings(through: AcronymCategoryPivot.self, from: \.$acronym, to: \.$category)
   var categories: [Category]
+
+    @Timestamp(key: "created_at", on: .create)
+    var createdAt: Date?
+
+    @Timestamp(key: "updated_at", on: .update)
+    var updatedAt: Date?
   
   init() {}
   

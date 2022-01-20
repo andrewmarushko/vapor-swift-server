@@ -11,6 +11,7 @@ struct AcronymsController: RouteCollection {
     acronymsRoutes.get("sorted", use: sortedHandler)
     acronymsRoutes.get(":acronymID", "user", use: getUserHandler)
     acronymsRoutes.get(":acronymID", "categories", use: getCategoriesHandler)
+      acronymsRoutes.get("mostRecent", use: getMostResentAcronyms)
 
     let tokenAuthMiddleware = Token.authenticator()
     let guardAuthMiddleware = User.guardMiddleware()
@@ -115,6 +116,11 @@ struct AcronymsController: RouteCollection {
       acronym.$categories.detach(category, on: req.db).transform(to: .noContent)
     }
   }
+
+    func getMostResentAcronyms(_ req: Request) -> EventLoopFuture<[Acronym]> {
+        Acronym.query(on: req.db).sort(\.$updatedAt, .descending)
+            .all()
+    }
 }
 
 struct CreateAcronymData: Content {
