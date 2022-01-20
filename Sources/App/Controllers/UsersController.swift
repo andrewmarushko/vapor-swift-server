@@ -14,6 +14,9 @@ struct UsersController: RouteCollection {
     let guardAuthMiddleware = User.guardMiddleware()
     let tokenAuthGroup = usersRoute.grouped(tokenAuthMiddleware, guardAuthMiddleware)
     tokenAuthGroup.post(use: createHandler)
+
+      let usersV2Route = routes.grouped("api", "v2", "users")
+      usersV2Route.get(":userID", use: getV2Handler)
   }
 
   func createHandler(_ req: Request) throws -> EventLoopFuture<User.Public> {
@@ -29,6 +32,10 @@ struct UsersController: RouteCollection {
   func getHandler(_ req: Request) -> EventLoopFuture<User.Public> {
     User.find(req.parameters.get("userID"), on: req.db).unwrap(or: Abort(.notFound)).convertToPublic()
   }
+
+    func getV2Handler(_ req: Request) -> EventLoopFuture<User.PublicV2> {
+        User.find(req.parameters.get("userID"), on: req.db).unwrap(or: Abort(.notFound)).convertToPublicV2()
+    }
 
   func getAcronymsHandler(_ req: Request) -> EventLoopFuture<[Acronym]> {
     User.find(req.parameters.get("userID"), on: req.db).unwrap(or: Abort(.notFound)).flatMap { user in
