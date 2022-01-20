@@ -8,6 +8,7 @@ struct CreateUser: Migration {
       .field(User.v20210113.username, .string, .required)
       .field(User.v20210113.email, .string, .required).unique(on: User.v20210113.username)
       .field(User.v20210113.password, .string, .required)
+      .field("deleted_at", .datetime)
       .field("profilePicture", .string)
       .unique(on: "username")
       .create()

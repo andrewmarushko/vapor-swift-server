@@ -27,6 +27,9 @@ final class User: Model, Content {
   @Children(for: \.$user)
   var acronyms: [Acronym]
 
+    @Timestamp(key: "deleted_at", on: .delete)
+    var deletedAt: Date?
+
     @OptionalField(key: User.v20210114.twitterURL)
     var twitterURL: String?
   
