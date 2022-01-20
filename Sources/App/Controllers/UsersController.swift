@@ -1,4 +1,5 @@
 import Vapor
+import Fluent
 
 struct UsersController: RouteCollection {
   func boot(routes: RoutesBuilder) throws {
@@ -15,6 +16,7 @@ struct UsersController: RouteCollection {
     let tokenAuthGroup = usersRoute.grouped(tokenAuthMiddleware, guardAuthMiddleware)
     tokenAuthGroup.post(use: createHandler)
       tokenAuthGroup.delete(":userID", use: deleteHandler)
+      tokenAuthGroup.post(":userID", "restore", use: restoreHandler)
 
       let usersV2Route = routes.grouped("api", "v2", "users")
       usersV2Route.get(":userID", use: getV2Handler)
@@ -54,6 +56,19 @@ struct UsersController: RouteCollection {
         User.find(req.parameters.get("userID"), on: req.db).unwrap(or: Abort(.notFound))
             .flatMap { user in
                 user.delete(on: req.db).transform(to: .noContent)
+            }
+    }
+
+    func restoreHandler(_ req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        let userID = try req.parameters.require("userID", as: UUID.self)
+
+        return User.query(on: req.db)
+            .withDeleted()
+            .filter(\.$id == userID)
+            .first()
+            .unwrap(or: Abort(.notFound))
+            .flatMap { user in
+                user.restore(on: req.db).transform(to: .ok)
             }
     }
 }
