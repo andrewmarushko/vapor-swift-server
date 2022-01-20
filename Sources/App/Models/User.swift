@@ -1,7 +1,7 @@
 import Fluent
 import Vapor
 import Foundation
-import CloudKit
+
 
 final class User: Model, Content {
   static let schema = "users"
