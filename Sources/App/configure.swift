@@ -38,9 +38,16 @@ public func configure(_ app: Application) throws {
   app.migrations.add(CreateCategory())
   app.migrations.add(CreateAcronymCategoryPivot())
   app.migrations.add(CreateToken())
-  app.migrations.add(CreateAdminUser())
+
+    switch app.environment {
+        case .development, .testing:
+            app.migrations.add(CreateAdminUser())
+        default: break
+    }
+
+    app.migrations.add(AddTwitterURLToUser())
     app.migrations.add(CreatePasswordToken())
-  
+    app.migrations.add(MakeCategoriesUnique())
   app.logger.logLevel = .debug
   
   try app.autoMigrate().wait()

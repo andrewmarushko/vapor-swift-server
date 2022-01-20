@@ -1,5 +1,7 @@
 import Fluent
 import Vapor
+import Foundation
+import CloudKit
 
 final class User: Model, Content {
   static let schema = "users"
@@ -24,15 +26,19 @@ final class User: Model, Content {
   
   @Children(for: \.$user)
   var acronyms: [Acronym]
+
+    @OptionalField(key: User.v20210114.twitterURL)
+    var twitterURL: String?
   
   init() {}
   
-    init(id: UUID? = nil, name: String, username: String, password: String, email: String, profilePicture: String? = nil) {
+    init(id: UUID? = nil, name: String, username: String, password: String, email: String, profilePicture: String? = nil, twitterURL: String? = nil) {
     self.name = name
     self.username = username
         self.email = email
     self.password = password
         self.profilePicture = profilePicture
+        self.twitterURL = twitterURL
   }
 
   final class Public: Content {
@@ -46,12 +52,38 @@ final class User: Model, Content {
       self.username = username
     }
   }
+
+    final class PublicV2: Content {
+        var id: UUID?
+        var name: String
+        var username: String
+        var twitterURL: String?
+
+        init(id: UUID?, name: String, username: String, twitterURL: String? = nil) {
+            self.id = id
+            self.name = name
+            self.username = username
+            self.twitterURL = twitterURL
+        }
+    }
 }
+
+
+
 
 extension User {
   func convertToPublic() -> User.Public {
     return User.Public(id: id, name: name, username: username)
   }
+
+    func convertToPublicV2() -> User.PublicV2 {
+        return User.PublicV2(
+            id: id,
+            name: name,
+            username: username,
+            twitterURL: twitterURL
+        )
+    }
 }
 
 extension EventLoopFuture where Value: User {
@@ -60,18 +92,31 @@ extension EventLoopFuture where Value: User {
       return user.convertToPublic()
     }
   }
+    func convertToPublicV2() -> EventLoopFuture<User.PublicV2> {
+        return self.map { user in
+            return user.convertToPublicV2()
+        }
+    }
 }
 
 extension Collection where Element: User {
   func convertToPublic() -> [User.Public] {
     return self.map { $0.convertToPublic() }
   }
+    func convertToPublicV2() -> [User.PublicV2] {
+        return self.map { $0.convertToPublicV2() }
+    }
 }
 
 extension EventLoopFuture where Value == Array<User> {
   func convertToPublic() -> EventLoopFuture<[User.Public]> {
     return self.map { $0.convertToPublic() }
   }
+
+    func convertToPublicV2() -> EventLoopFuture<[User.PublicV2]> {
+        return self.map { $0.convertToPublicV2() }
+    }
+
 }
 
 extension User: ModelAuthenticatable {
