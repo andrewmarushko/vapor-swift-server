@@ -17,7 +17,7 @@ struct UsersController: RouteCollection {
     tokenAuthGroup.post(use: createHandler)
       tokenAuthGroup.delete(":userID", use: deleteHandler)
       tokenAuthGroup.post(":userID", "restore", use: restoreHandler)
-
+      tokenAuthGroup.delete(":userID", "force", use: forseDeleteHandler)
       let usersV2Route = routes.grouped("api", "v2", "users")
       usersV2Route.get(":userID", use: getV2Handler)
   }
@@ -69,6 +69,13 @@ struct UsersController: RouteCollection {
             .unwrap(or: Abort(.notFound))
             .flatMap { user in
                 user.restore(on: req.db).transform(to: .ok)
+            }
+    }
+
+    func forseDeleteHandler(_ req: Request) -> EventLoopFuture<HTTPStatus> {
+        User.find(req.parameters.get("userID"), on: req.db).unwrap(or: Abort(.notFound))
+            .flatMap { user in
+                user.delete(force: true, on: req.db).transform(to: .noContent)
             }
     }
 }
